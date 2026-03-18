@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tracking Embarques{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        (() => {
+            try {
+                const storedTheme = localStorage.getItem("theme") || "light";
+                document.documentElement.setAttribute("data-theme", storedTheme);
+                const isMobile = window.matchMedia && window.matchMedia("(max-width: 980px)").matches;
+                const state = localStorage.getItem("sidebar_state") || "expanded";
+                if (!isMobile && state === "collapsed") {
+                    document.documentElement.classList.add("sidebar-collapsed");
+                }
+                document.documentElement.classList.add("no-transition");
+            } catch (err) {
+                document.documentElement.classList.add("no-transition");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="/static/base.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <div class="brand-icon"><i class="fas fa-plane-arrival"></i></div>
+                <div class="brand-text">
+                    <div class="brand-title">Procurement</div>
+                    <div class="brand-subtitle">Tracking Embarques</div>
+                </div>
+                <button class="icon-btn small sidebar-toggle" type="button" title="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <nav class="menu">
+                <a class="menu-item" href="/dashboard">
+                    <i class="fas fa-table-columns"></i>
+                    <span>Dashboard</span>
+                </a>
+                {% if user and user.role == 'ADMIN' %}
+                <a class="menu-item" href="/admin/embarques">
+                    <i class="fas fa-boxes-stacked"></i>
+                    <span>Embarques</span>
+                </a>
+                <a class="menu-item" href="/admin/usuarios">
+                    <i class="fas fa-user-gear"></i>
+                    <span>Centro Admin de Usuarios</span>
+                </a>
+                {% endif %}
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-card">
+                    <div class="user-avatar">{{ (user.name[:1] if user) or 'U' }}</div>
+                    <div>
+                        <div class="user-name">{{ user.name if user else 'Usuario' }}</div>
+                        <div class="user-role">{{ user.role if user else '' }}</div>
+                    </div>
+                </div>
+                <a class="logout-btn" href="/auth/logout">
+                    <i class="fas fa-right-from-bracket"></i>
+                    <span>Salir</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="main">
+            <header class="topbar">
+                <button class="icon-btn sidebar-toggle" type="button" title="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="topbar-actions">
+                    <button class="icon-btn" id="themeToggle" type="button" title="Tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+            <main class="content">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+    <script src="/static/base.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+
+
+

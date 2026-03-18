@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local environment / secrets
+.env
+
+# Sensitive local data
+data/login.json
+data/datoscompras.json
+data/recepciones_compras.json
+data/mercadolibre.json
+data/shipments.json
+data/shipments_cache.json
+data/users.json
+
+# Optional local IDE/system files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Test/Lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

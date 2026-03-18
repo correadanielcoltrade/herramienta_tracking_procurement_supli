@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso - Tracking Embarques</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/base.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-theme="light">
+    <div class="auth-shell">
+        <div class="auth-card">
+            <div class="auth-brand">
+                <i class="fas fa-plane-arrival"></i>
+                <div>
+                    <div class="auth-title">Tracking Embarques</div>
+                    <div class="auth-subtitle">Ingreso seguro</div>
+                </div>
+            </div>
+            <form id="loginForm" class="auth-form">
+                <label class="field">
+                    <span>Usuario</span>
+                    <input type="text" name="username" placeholder="admin o user" required>
+                </label>
+                <label class="field">
+                    <span>Contrasena</span>
+                    <input type="password" name="password" placeholder="********" required>
+                </label>
+                <button class="primary-btn" type="submit">
+                    <i class="fas fa-arrow-right-to-bracket"></i>
+                    <span>Ingresar</span>
+                </button>
+                <p class="auth-hint">Admin: admin123 | User: user123</p>
+            </form>
+            <div class="auth-message" id="loginMessage"></div>
+        </div>
+    </div>
+    <script src="/static/base.js"></script>
+    <script src="/static/auth.js"></script>
+</body>
+</html>

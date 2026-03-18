@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Admin Usuarios{% endblock %}
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Gestion de Usuarios</h1>
+        <p>Crea nuevos usuarios y administradores con acceso al sistema.</p>
+    </div>
+</section>
+
+<div class="grid-2">
+    <div class="panel">
+        <div class="form-header">
+            <h3 id="userFormTitle">Nuevo usuario</h3>
+            <button class="ghost-btn" id="resetUserForm"><i class="fas fa-rotate"></i> Limpiar</button>
+        </div>
+        <form id="userForm">
+            <div class="form-grid">
+                <label class="field">
+                    <span>Username</span>
+                    <input type="text" name="username" required>
+                </label>
+                <label class="field">
+                    <span>Nombre</span>
+                    <input type="text" name="name" required>
+                </label>
+                <label class="field">
+                    <span>Rol</span>
+                    <select name="role" class="table-input">
+                        <option value="USER">USER</option>
+                        <option value="ADMIN">ADMIN</option>
+                    </select>
+                </label>
+                <label class="field">
+                    <span>Password</span>
+                    <input type="password" name="password" placeholder="********">
+                </label>
+            </div>
+            <div class="form-submit">
+                <button class="primary-btn" type="submit">
+                    <i class="fas fa-floppy-disk"></i> Guardar usuario
+                </button>
+            </div>
+            <div class="small-text" id="userFormMessage"></div>
+        </form>
+    </div>
+    <div class="panel">
+        <h3>Usuarios</h3>
+        <div class="table-wrap">
+            <table class="data-table" id="usersTable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Nombre</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="usersBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/users.js"></script>
+{% endblock %}

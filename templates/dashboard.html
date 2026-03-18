@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Embarques{% endblock %}
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Dashboard de Embarques</h1>
+        <p>Vista general estilo tablero de vuelos para seguimiento rapido.</p>
+    </div>
+</section>
+
+<div class="panel">
+    <h3>Filtros</h3>
+    <div class="filters">
+        <input type="text" id="filterImp" placeholder="IMP">
+        <input type="text" id="filterProveedor" placeholder="Proveedor">
+        <input type="text" id="filterEstado" placeholder="Estado">
+        <select id="filterCanal">
+            <option value="">Canal</option>
+            <option value="retail">Retail</option>
+            <option value="resellers">Resellers</option>
+            <option value="corporativo">Corporativo</option>
+            <option value="ecommerce">Ecommerce</option>
+            <option value="telcom">Telcom</option>
+            <option value="libre">Libre</option>
+        </select>
+        <select id="filterTipoCompra">
+            <option value="">Tipo compra</option>
+            <option value="NACIONAL">Nacional</option>
+            <option value="INTERNACIONAL">Internacional</option>
+        </select>
+        <input type="text" id="filterProducto" placeholder="Producto">
+        <input type="text" id="filterMarca" placeholder="Marca">
+        <input type="text" id="filterSku" placeholder="SKU">
+        <input type="date" id="filterFechaDesde" placeholder="Desde">
+        <input type="date" id="filterFechaHasta" placeholder="Hasta">
+        <button class="ghost-btn" id="clearFilters">Limpiar</button>
+        <button class="secondary-btn" id="exportFilteredBtn"><i class="fas fa-file-excel"></i> Exportar</button>
+    </div>
+</div>
+
+<div class="panel">
+    <h3>Embarques</h3>
+    <div class="cards-grid" id="shipmentsGrid"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/dashboard.js"></script>
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}Admin Embarques{% endblock %}
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Gestion de Embarques</h1>
+        <p>Registrar, editar e importar embarques con multiples productos.</p>
+    </div>
+    <div class="header-actions">
+        <button class="primary-btn" id="newShipmentBtn"><i class="fas fa-plus"></i> Nuevo embarque</button>
+        <button class="secondary-btn" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+        <button class="secondary-btn" id="exportJsonBtn"><i class="fas fa-file-code"></i> Exportar JSON</button>
+        <button class="ghost-btn" id="templateBtn"><i class="fas fa-download"></i> Plantilla Excel</button>
+    </div>
+</section>
+
+<div class="grid-2">
+    <div class="panel">
+        <h3>Filtros</h3>
+        <div class="filters">
+            <input type="text" id="filterImp" placeholder="IMP">
+            <input type="text" id="filterProveedor" placeholder="Proveedor">
+            <input type="text" id="filterProducto" placeholder="Producto">
+            <input type="text" id="filterMarca" placeholder="Marca">
+            <input type="text" id="filterSku" placeholder="SKU">
+            <input type="date" id="filterFecha">
+            <input type="text" id="filterEstado" placeholder="Estado">
+            <select id="filterTipoCompra">
+                <option value="">Tipo compra</option>
+                <option value="NACIONAL">Nacional</option>
+                <option value="INTERNACIONAL">Internacional</option>
+            </select>
+            <button class="ghost-btn" id="clearFilters">Limpiar</button>
+        </div>
+    </div>
+    <div class="panel">
+        <h3>Importacion masiva</h3>
+        <form id="importForm" class="import-form">
+            <input type="file" id="importFile" accept=".xlsx,.xls" required>
+            <button class="secondary-btn" type="submit"><i class="fas fa-upload"></i> Importar Excel</button>
+            <div class="small-text" id="importStatus"></div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="shipmentModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+        <div class="panel form-panel modal-panel">
+            <div class="form-header">
+                <h3 id="formTitle">Nuevo embarque</h3>
+                <div class="form-actions">
+                    <button class="ghost-btn" id="resetFormBtn"><i class="fas fa-rotate"></i> Limpiar</button>
+                    <button class="icon-btn small" id="closeShipmentModal" type="button" title="Cerrar">
+                        <i class="fas fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <form id="shipmentForm">
+                <div class="form-grid">
+                    <label class="field">
+                        <span>IMP</span>
+                        <input type="text" name="imp" required>
+                    </label>
+                    <label class="field">
+                        <span>Proveedor</span>
+                        <input type="text" name="proveedor" required>
+                    </label>
+            <label class="field">
+                <span>Estado</span>
+                <select name="estado_imp" required>
+                    <option value="">Selecciona</option>
+                    <option value="PENDIENTE">⏳ Pendiente</option>
+                    <option value="EN PROCESO">⚙️ En proceso</option>
+                    <option value="EN TRANSITO">🚚 En tránsito</option>
+                    <option value="EN NACIONALIZACION">🏛️ En nacionalización</option>
+                    <option value="EN DEPOSITO">🏚️ En depósito</option>
+                    <option value="EN INCLUSION">📝 En inclusión</option>
+                    <option value="ABIERTO">📦 Abierto</option>
+                    <option value="ENTREGADO">✅ Entregado</option>
+                </select>
+            </label>
+            <label class="field">
+                <span>Tipo compra</span>
+                <select name="tipo_compra" required>
+                    <option value="">Selecciona</option>
+                    <option value="NACIONAL">Nacional</option>
+                    <option value="INTERNACIONAL">Internacional</option>
+                </select>
+            </label>
+            <label class="field">
+                <span>Fecha llegada</span>
+                <input type="date" name="fecha_llegada" required>
+            </label>
+                </div>
+
+                <div class="table-toolbar">
+                    <h4>Productos</h4>
+                    <button class="ghost-btn" id="addProductRow" type="button">
+                        <i class="fas fa-plus"></i> Agregar producto
+                    </button>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Marca</th>
+                                <th>UPC</th>
+                                <th>SKU</th>
+                                <th>Q Total</th>
+                                <th>FOB USD</th>
+                                <th>DDP</th>
+                                <th>Retail</th>
+                                <th>Resellers</th>
+                                <th>Corporativo</th>
+                                <th>Ecommerce</th>
+                                <th>Telcom</th>
+                                <th>Libre</th>
+                                <th>Conf</th>
+                                <th>Obs</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsBody"></tbody>
+                    </table>
+                </div>
+                <div class="form-submit">
+                    <button class="primary-btn" type="submit" id="saveBtn">
+                        <i class="fas fa-floppy-disk"></i> Guardar embarque
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="panel table-panel">
+    <div class="table-header">
+        <h3>Listado de embarques</h3>
+        <button class="danger-btn" id="bulkDeleteBtn">
+            <i class="fas fa-trash"></i> Eliminar seleccionados
+        </button>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table" id="shipmentsTable">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAll"></th>
+                    <th></th>
+                    <th>IMP</th>
+                    <th>Proveedor</th>
+                    <th>Estado</th>
+                    <th>Tipo compra</th>
+                    <th>Fecha llegada</th>
+                    <th>Total productos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="shipmentsBody"></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/admin.js"></script>
+{% endblock %}

@@ -70,6 +70,15 @@ def api_update_shipment(shipment_id):
     return jsonify({"data": shipment})
 
 
+@admin_bp.route("/api/shipments/<shipment_id>", methods=["GET"])
+@require_auth(roles=["ADMIN"])
+def api_get_shipment(shipment_id):
+    shipment = get_shipment(shipment_id)
+    if not shipment:
+        return jsonify({"error": "Not found"}), 404
+    return jsonify({"data": shipment})
+
+
 @admin_bp.route("/api/shipments/<shipment_id>", methods=["DELETE"])
 @require_auth(roles=["ADMIN"])
 def api_delete_shipment(shipment_id):

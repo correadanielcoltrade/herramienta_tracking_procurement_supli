@@ -304,5 +304,39 @@
       "created_at": "2026-03-13T12:36:50.738972",
       "updated_at": "2026-03-13T12:36:50.738989"
     }
+  },
+  {
+    "id": 7,
+    "created_at": "2026-03-18T20:00:12.487432+00:00",
+    "updated_at": "2026-03-18T20:01:46.084492+00:00",
+    "data_json": {
+      "id": "c63e9a09-ee05-4e22-ba97-c60f7e531276",
+      "imp": "IMP-2026-001",
+      "proveedor": "Buhotec",
+      "estado_imp": "ENTREGADO",
+      "tipo_compra": "INTERNACIONAL",
+      "fecha_llegada": "2026-03-18",
+      "productos": [
+        {
+          "producto": "Hola",
+          "marca": "Hola",
+          "upc": "Hola",
+          "sku": "Hola",
+          "q_total": 100,
+          "costo_fob_usd": 10000.0,
+          "costo_proyectado_ddp": 11000.0,
+          "retail": 20,
+          "resellers": 20,
+          "corporativo": 20,
+          "ecommerce": 10,
+          "telcom": 10,
+          "libre": 20,
+          "confirmacion_cantidades_recibidas": "Hola",
+          "observaciones": "Hola"
+        }
+      ],
+      "created_at": "2026-03-18T20:00:12.487432+00:00",
+      "updated_at": "2026-03-18T20:01:46.084492+00:00"
+    }
   }
 ]

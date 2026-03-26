@@ -7,6 +7,7 @@ from functions.shipments_service import (
     delete_shipment,
     export_template,
     export_to_excel,
+    get_shipment,
     import_from_excel,
     list_shipments_summary,
     list_shipments,

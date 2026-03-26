@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "created_at": "2026-01-01T00:00:00+00:00",
+    "updated_at": "2026-01-01T00:00:00+00:00",
+    "data_json": {
+      "username": "admin",
+      "name": "Administrador",
+      "role": "ADMIN",
+      "password_hash": "scrypt:32768:8:1$57Kwo01eGKX4Dzit$3f0c2ccabd22b080b47d6338e4342f5eec54c202a4a308a72cff38a2dc3933f9ad373c07fd0fa8210753dbc7069ec18e3ac5502e3083a2454b0efb0d1fdac67f"
+    }
+  },
+  {
+    "id": 2,
+    "created_at": "2026-01-01T00:00:00+00:00",
+    "updated_at": "2026-01-01T00:00:00+00:00",
+    "data_json": {
+      "username": "user",
+      "name": "Usuario",
+      "role": "USER",
+      "password_hash": "scrypt:32768:8:1$OzQXDEumtZxg9uCu$755b25c4335b07e80db2d1e5802cb931e0e7874c4f12081b8d9e4fcb45d4360b0c71727bef885028a7efae33afd5e7bb856f4f24f11a4e6f2ff5fc2ffe4b8a7f"
+    }
+  },
+  {
+    "id": 3,
+    "created_at": "2026-01-01T00:00:00+00:00",
+    "updated_at": "2026-01-01T00:00:00+00:00",
+    "data_json": {
+      "username": "correadaniel@coltrade.com.co",
+      "name": "Daniel Correa",
+      "role": "ADMIN",
+      "password_hash": "scrypt:32768:8:1$djuygARu6Cg40hY7$b2d5c97c3451619a456e0c3f586c50468ea0573b3a7b76f18a162d2649f0801428dde08240cbc5aac44ddb8ad1f98827731a7ee61dafb29253c752db25bdb5f7"
+    }
+  }
+]

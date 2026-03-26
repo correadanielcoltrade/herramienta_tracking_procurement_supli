@@ -1,3 +1,7 @@
+"""
+auth_service.py - Autenticacion y autorizacion via almacenamiento JSON primario.
+"""
+
 import os
 from datetime import datetime, timedelta
 from functools import wraps
@@ -6,109 +10,120 @@ import jwt
 from flask import current_app, g, jsonify, redirect, request
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from queries.json_store import read_json, write_json
-from queries.db import db_enabled, execute, init_db
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.path.join(BASE_DIR, "data")
-USERS_FILE = os.path.join(DATA_DIR, "users.json")
+from queries.storage import (
+    get_record_by_field,
+    load_records,
+    make_record,
+    next_id,
+    save_records,
+)
 
 JWT_ALG = "HS256"
 JWT_EXP_HOURS = 8
 
-
-def ensure_users_file():
-    if os.path.exists(USERS_FILE):
-        return
-    users = [
-        {
-            "username": "admin",
-            "name": "Administrador",
-            "role": "ADMIN",
-            "password_hash": generate_password_hash("admin123"),
-        },
-        {
-            "username": "user",
-            "name": "Usuario",
-            "role": "USER",
-            "password_hash": generate_password_hash("user123"),
-        },
-    ]
-    write_json(USERS_FILE, users)
+# Clave de archivo de usuarios
+_USERS_FILE_KEY = "ts_users"
 
 
-def load_users():
-    if db_enabled():
-        init_db()
-        ensure_default_users_db()
-        rows = execute(
-            "SELECT username, name, role, password_hash FROM trackingsupli_users ORDER BY username",
-            fetchall=True,
+# ---------------------------------------------------------------------------
+# Bootstrap de usuarios por defecto
+# ---------------------------------------------------------------------------
+
+def _ensure_default_users() -> None:
+    """
+    Crea los usuarios admin/user por defecto si ts_users.json esta vacio
+    o si no existe ninguno de los dos.
+    """
+    records = load_records(_USERS_FILE_KEY)
+    usernames = {r.get("data_json", {}).get("username", "") for r in records}
+
+    new_records = list(records)
+    next_auto_id = next_id(_USERS_FILE_KEY)
+    changed = False
+
+    if "admin" not in usernames:
+        new_records.append(
+            make_record(
+                next_auto_id,
+                {
+                    "username": "admin",
+                    "name": "Administrador",
+                    "role": "ADMIN",
+                    "password_hash": generate_password_hash("admin123"),
+                },
+            )
         )
-        return rows or []
-    ensure_users_file()
-    return read_json(USERS_FILE, [])
+        next_auto_id += 1
+        changed = True
 
-
-def get_user(username: str):
-    if db_enabled():
-        init_db()
-        ensure_default_users_db()
-        return execute(
-            "SELECT username, name, role, password_hash FROM trackingsupli_users WHERE username = %s",
-            (username,),
-            fetchone=True,
+    if "user" not in usernames:
+        new_records.append(
+            make_record(
+                next_auto_id,
+                {
+                    "username": "user",
+                    "name": "Usuario",
+                    "role": "USER",
+                    "password_hash": generate_password_hash("user123"),
+                },
+            )
         )
-    users = load_users()
-    for user in users:
-        if user.get("username") == username:
-            return user
+        changed = True
+
+    if changed:
+        save_records(_USERS_FILE_KEY, new_records)
+
+
+# ---------------------------------------------------------------------------
+# Carga de usuarios
+# ---------------------------------------------------------------------------
+
+def load_users() -> list:
+    """Devuelve la lista plana de dicts de usuario."""
+    _ensure_default_users()
+    return [r.get("data_json", {}) for r in load_records(_USERS_FILE_KEY)]
+
+
+def get_user(username: str) -> dict | None:
+    """Devuelve el dict de usuario para ese username, o None."""
+    _ensure_default_users()
+    record = get_record_by_field(_USERS_FILE_KEY, "username", username)
+    if record:
+        return record.get("data_json", {})
     return None
 
 
-def authenticate(username: str, password: str):
+# ---------------------------------------------------------------------------
+# Autenticacion
+# ---------------------------------------------------------------------------
+
+def authenticate(username: str, password: str) -> dict | None:
+    """
+    Verifica credenciales. Admite password_hash (werkzeug) o password en texto
+    plano (compatibilidad con registros legacy).
+    Devuelve el dict de usuario si las credenciales son correctas, None si no.
+    """
     user = get_user(username)
     if not user:
         return None
+
     password_hash = user.get("password_hash", "")
     if password_hash:
         if not check_password_hash(password_hash, password):
             return None
         return user
+
+    # Fallback para registros legacy con password en texto plano
     if user.get("password") != password:
         return None
     return user
 
 
-def ensure_default_users_db():
-    count_row = execute(
-        "SELECT COUNT(*) AS count FROM trackingsupli_users", fetchone=True
-    )
-    if count_row and count_row.get("count", 0) > 0:
-        return
-    admin_hash = generate_password_hash("admin123")
-    user_hash = generate_password_hash("user123")
-    execute(
-        """
-        INSERT INTO trackingsupli_users (username, name, role, password_hash)
-        VALUES
-            (%s, %s, %s, %s),
-            (%s, %s, %s, %s)
-        """,
-        (
-            "admin",
-            "Administrador",
-            "ADMIN",
-            admin_hash,
-            "user",
-            "Usuario",
-            "USER",
-            user_hash,
-        ),
-    )
+# ---------------------------------------------------------------------------
+# JWT
+# ---------------------------------------------------------------------------
 
-
-def create_token(user, secret_key: str):
+def create_token(user: dict, secret_key: str) -> str:
     now = datetime.utcnow()
     payload = {
         "sub": user.get("username"),
@@ -123,11 +138,11 @@ def create_token(user, secret_key: str):
     return token
 
 
-def decode_token(token: str, secret_key: str):
+def decode_token(token: str, secret_key: str) -> dict:
     return jwt.decode(token, secret_key, algorithms=[JWT_ALG])
 
 
-def get_token_from_request():
+def get_token_from_request() -> str | None:
     auth = request.headers.get("Authorization", "")
     if auth.lower().startswith("bearer "):
         return auth.split(" ", 1)[1].strip()
@@ -137,7 +152,7 @@ def get_token_from_request():
     return None
 
 
-def try_get_user_from_request():
+def try_get_user_from_request() -> dict | None:
     token = get_token_from_request()
     if not token:
         return None
@@ -151,6 +166,10 @@ def try_get_user_from_request():
         "role": payload.get("role"),
     }
 
+
+# ---------------------------------------------------------------------------
+# Decorador de autorizacion
+# ---------------------------------------------------------------------------
 
 def require_auth(roles=None, redirect_to_login=False):
     def decorator(fn):

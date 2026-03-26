@@ -1,0 +1,308 @@
+[
+  {
+    "id": 1,
+    "created_at": "2026-03-12T00:00:00+00:00",
+    "updated_at": "2026-03-13T15:45:41+00:00",
+    "data_json": {
+      "id": "4f2a3e9b-9e4d-4f0a-8b9b-01f3b7a5c111",
+      "imp": "IMP-2026-001",
+      "proveedor": "Global Imports",
+      "estado_imp": "Entregado",
+      "tipo_compra": "INTERNACIONAL",
+      "fecha_llegada": "2026-03-20",
+      "productos": [
+        {
+          "producto": "Panel Solar 450W",
+          "marca": "Helios",
+          "upc": "123456789012",
+          "sku": "HS-450W",
+          "q_total": 120,
+          "costo_fob_usd": 85.5,
+          "costo_proyectado_ddp": 102.3,
+          "retail": 40,
+          "resellers": 20,
+          "corporativo": 30,
+          "ecommerce": 20,
+          "telcom": 5,
+          "libre": 5,
+          "confirmacion_cantidades_recibidas": "Pendiente",
+          "observaciones": "Entrega parcial en puerto."
+        },
+        {
+          "producto": "Inversor 5kW",
+          "marca": "Helios",
+          "upc": "123456789013",
+          "sku": "INV-5KW",
+          "q_total": 40,
+          "costo_fob_usd": 210.0,
+          "costo_proyectado_ddp": 255.0,
+          "retail": 10,
+          "resellers": 8,
+          "corporativo": 12,
+          "ecommerce": 6,
+          "telcom": 2,
+          "libre": 2,
+          "confirmacion_cantidades_recibidas": "Pendiente",
+          "observaciones": ""
+        }
+      ],
+      "created_at": "2026-03-12T00:00:00",
+      "updated_at": "2026-03-13T15:45:41.359532"
+    }
+  },
+  {
+    "id": 2,
+    "created_at": "2026-03-12T00:00:00+00:00",
+    "updated_at": "2026-03-12T00:00:00+00:00",
+    "data_json": {
+      "id": "91f0f54c-8f2f-4f7a-9c88-2a8f4f3c7c22",
+      "imp": "IMP-2026-002",
+      "proveedor": "Pacific Trade",
+      "estado_imp": "EN ADUANA",
+      "tipo_compra": "",
+      "fecha_llegada": "2026-03-28",
+      "productos": [
+        {
+          "producto": "Bateria Litio 2kWh",
+          "marca": "Voltix",
+          "upc": "987654321098",
+          "sku": "BT-2K",
+          "q_total": 60,
+          "costo_fob_usd": 140.0,
+          "costo_proyectado_ddp": 165.0,
+          "retail": 15,
+          "resellers": 10,
+          "corporativo": 20,
+          "ecommerce": 10,
+          "telcom": 3,
+          "libre": 2,
+          "confirmacion_cantidades_recibidas": "Pendiente",
+          "observaciones": "Revisar etiquetado."
+        }
+      ],
+      "created_at": "2026-03-12T00:00:00",
+      "updated_at": "2026-03-12T00:00:00"
+    }
+  },
+  {
+    "id": 3,
+    "created_at": "2026-03-13T12:35:24+00:00",
+    "updated_at": "2026-03-13T16:12:23+00:00",
+    "data_json": {
+      "id": "0598706e-4066-4cef-8ea8-f8b9f11ed83e",
+      "imp": "123",
+      "proveedor": "123",
+      "estado_imp": "123",
+      "tipo_compra": "NACIONAL",
+      "fecha_llegada": "2026-03-13",
+      "productos": [
+        {
+          "producto": "Hola",
+          "marca": "Hola",
+          "upc": "Hola",
+          "sku": "Hola",
+          "q_total": 0,
+          "costo_fob_usd": 0,
+          "costo_proyectado_ddp": 0,
+          "retail": 0,
+          "resellers": 0,
+          "corporativo": 0,
+          "ecommerce": 0,
+          "telcom": 0,
+          "libre": 0,
+          "confirmacion_cantidades_recibidas": "Hola",
+          "observaciones": "Hola"
+        },
+        {
+          "producto": "Hola",
+          "marca": "Hola",
+          "upc": "Hola",
+          "sku": "Hola",
+          "q_total": 0,
+          "costo_fob_usd": 0,
+          "costo_proyectado_ddp": 0,
+          "retail": 0,
+          "resellers": 0,
+          "corporativo": 0,
+          "ecommerce": 0,
+          "telcom": 0,
+          "libre": 0,
+          "confirmacion_cantidades_recibidas": "Hola",
+          "observaciones": "Hola"
+        },
+        {
+          "producto": "Hola",
+          "marca": "Hola",
+          "upc": "Hola",
+          "sku": "Hola",
+          "q_total": 0,
+          "costo_fob_usd": 0,
+          "costo_proyectado_ddp": 0,
+          "retail": 0,
+          "resellers": 0,
+          "corporativo": 0,
+          "ecommerce": 0,
+          "telcom": 0,
+          "libre": 0,
+          "confirmacion_cantidades_recibidas": "Hola",
+          "observaciones": "Hola"
+        },
+        {
+          "producto": "Hola",
+          "marca": "Hola",
+          "upc": "Hola",
+          "sku": "Hola",
+          "q_total": 0,
+          "costo_fob_usd": 0,
+          "costo_proyectado_ddp": 0,
+          "retail": 0,
+          "resellers": 0,
+          "corporativo": 0,
+          "ecommerce": 0,
+          "telcom": 0,
+          "libre": 0,
+          "confirmacion_cantidades_recibidas": "Hola",
+          "observaciones": "Hola"
+        },
+        {
+          "producto": "Hola",
+          "marca": "Hola",
+          "upc": "Hola",
+          "sku": "Hola",
+          "q_total": 0,
+          "costo_fob_usd": 0,
+          "costo_proyectado_ddp": 0,
+          "retail": 0,
+          "resellers": 0,
+          "corporativo": 0,
+          "ecommerce": 0,
+          "telcom": 0,
+          "libre": 0,
+          "confirmacion_cantidades_recibidas": "Hola",
+          "observaciones": "Hola"
+        },
+        {
+          "producto": "Hola",
+          "marca": "Hola",
+          "upc": "Hola",
+          "sku": "Hola",
+          "q_total": 0,
+          "costo_fob_usd": 0,
+          "costo_proyectado_ddp": 0,
+          "retail": 0,
+          "resellers": 0,
+          "corporativo": 0,
+          "ecommerce": 0,
+          "telcom": 0,
+          "libre": 0,
+          "confirmacion_cantidades_recibidas": "Hola",
+          "observaciones": "Hola"
+        }
+      ],
+      "created_at": "2026-03-13T12:35:24.047111",
+      "updated_at": "2026-03-13T16:12:23.546652"
+    }
+  },
+  {
+    "id": 4,
+    "created_at": "2026-03-13T12:36:50+00:00",
+    "updated_at": "2026-03-13T12:36:50+00:00",
+    "data_json": {
+      "id": "ffa45c7b-154b-42f5-8709-9d120bdad765",
+      "imp": "3546",
+      "proveedor": "3546",
+      "estado_imp": "3546",
+      "tipo_compra": "",
+      "fecha_llegada": "2026-03-13",
+      "productos": [
+        {
+          "producto": "Cosa 1",
+          "marca": "Cosa 1",
+          "upc": "Cosa 1",
+          "sku": "Cosa 1",
+          "q_total": 0,
+          "costo_fob_usd": 0,
+          "costo_proyectado_ddp": 0,
+          "retail": 0,
+          "resellers": 0,
+          "corporativo": 0,
+          "ecommerce": 0,
+          "telcom": 0,
+          "libre": 0,
+          "confirmacion_cantidades_recibidas": "Cosa 1",
+          "observaciones": "Cosa 1"
+        }
+      ],
+      "created_at": "2026-03-13T12:36:50.738175",
+      "updated_at": "2026-03-13T12:36:50.738193"
+    }
+  },
+  {
+    "id": 5,
+    "created_at": "2026-03-13T12:36:50+00:00",
+    "updated_at": "2026-03-13T12:36:50+00:00",
+    "data_json": {
+      "id": "96b76cc9-1487-4b9f-b4cb-168e56908ad5",
+      "imp": "9849",
+      "proveedor": "9849",
+      "estado_imp": "9849",
+      "tipo_compra": "",
+      "fecha_llegada": "2026-03-13",
+      "productos": [
+        {
+          "producto": "Cosa 2",
+          "marca": "Cosa 2",
+          "upc": "Cosa 2",
+          "sku": "Cosa 2",
+          "q_total": 0,
+          "costo_fob_usd": 0,
+          "costo_proyectado_ddp": 0,
+          "retail": 0,
+          "resellers": 0,
+          "corporativo": 0,
+          "ecommerce": 0,
+          "telcom": 0,
+          "libre": 0,
+          "confirmacion_cantidades_recibidas": "Cosa 2",
+          "observaciones": "Cosa 2"
+        }
+      ],
+      "created_at": "2026-03-13T12:36:50.738606",
+      "updated_at": "2026-03-13T12:36:50.738621"
+    }
+  },
+  {
+    "id": 6,
+    "created_at": "2026-03-13T12:36:50+00:00",
+    "updated_at": "2026-03-13T12:36:50+00:00",
+    "data_json": {
+      "id": "8f320a83-3c3d-4327-8a80-8a70a2f616f6",
+      "imp": "654",
+      "proveedor": "654",
+      "estado_imp": "654",
+      "tipo_compra": "",
+      "fecha_llegada": "2026-03-13",
+      "productos": [
+        {
+          "producto": "Cosa 3",
+          "marca": "Cosa 3",
+          "upc": "Cosa 3",
+          "sku": "Cosa 3",
+          "q_total": 0,
+          "costo_fob_usd": 0,
+          "costo_proyectado_ddp": 0,
+          "retail": 0,
+          "resellers": 0,
+          "corporativo": 0,
+          "ecommerce": 0,
+          "telcom": 0,
+          "libre": 0,
+          "confirmacion_cantidades_recibidas": "Cosa 3",
+          "observaciones": "Cosa 3"
+        }
+      ],
+      "created_at": "2026-03-13T12:36:50.738972",
+      "updated_at": "2026-03-13T12:36:50.738989"
+    }
+  }
+]

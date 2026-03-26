@@ -8,8 +8,6 @@ from dotenv import load_dotenv
 from Blueprint.auth import auth_bp
 from Blueprint.admin import admin_bp
 from Blueprint.user import user_bp
-from functions.auth_service import try_get_user_from_request
-from queries.db import init_db
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
@@ -24,7 +22,14 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(user_bp)
 
-init_db()
+# La inicializacion de BD es opcional: si no hay DATABASE_URL / DB_HOST
+# configurados, el sistema opera completamente con JSON.
+try:
+    from queries.db import db_enabled, init_db
+    if db_enabled():
+        init_db()
+except Exception:
+    pass
 
 
 @app.route("/")

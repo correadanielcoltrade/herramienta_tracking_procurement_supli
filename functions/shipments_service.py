@@ -520,7 +520,8 @@ def _normalize_row(row: dict, column_map: dict):
 
 
 def import_from_excel(file_storage) -> dict:
-    df = pd.read_excel(file_storage)
+    stream = BytesIO(file_storage.read())
+    df = pd.read_excel(stream)
     if df.empty:
         return {"created": 0, "updated": 0, "rows": 0}
 

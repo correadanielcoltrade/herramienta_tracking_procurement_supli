@@ -104,8 +104,11 @@ def api_import_excel():
     if "file" not in request.files:
         return jsonify({"error": "Archivo requerido"}), 400
     file_storage = request.files["file"]
-    result = import_from_excel(file_storage)
-    return jsonify({"data": result})
+    try:
+        result = import_from_excel(file_storage)
+        return jsonify({"data": result})
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 500
 
 
 @admin_bp.route("/api/export-excel", methods=["GET"])

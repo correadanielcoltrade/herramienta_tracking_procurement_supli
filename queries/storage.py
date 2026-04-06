@@ -273,6 +273,48 @@ def _deserialize_json(value):
 
 
 # ---------------------------------------------------------------------------
+# Lectura desde DB
+# ---------------------------------------------------------------------------
+
+def _load_from_db(file_key: str) -> list | None:
+    """
+    Carga todos los registros desde la tabla DB correspondiente.
+    Devuelve lista de dicts con estructura estandar, o None si la DB no esta
+    disponible o hay error (para que el llamador pueda hacer fallback a JSON).
+    Devuelve [] (lista vacia) si la DB esta disponible pero la tabla no tiene datos.
+    """
+    if not _db_enabled():
+        return None
+    try:
+        conn = _db_connect()
+        if conn is None:
+            return None
+        try:
+            table_name = _resolve_table(file_key, conn)
+            _ensure_table(conn, table_name)
+            with conn.cursor() as cur:
+                cur.execute(
+                    f"SELECT id, created_at, updated_at, data_json "
+                    f"FROM {table_name} ORDER BY id"
+                )
+                rows = cur.fetchall()
+            conn.commit()
+            return [
+                {
+                    "id":         row[0],
+                    "created_at": row[1],
+                    "updated_at": row[2],
+                    "data_json":  _deserialize_json(row[3]),
+                }
+                for row in rows
+            ]
+        finally:
+            conn.close()
+    except Exception:
+        return None
+
+
+# ---------------------------------------------------------------------------
 # Escritura en DB (silenciosa si falla)
 # ---------------------------------------------------------------------------
 
@@ -323,13 +365,23 @@ def _sync_to_db(file_key: str, records: list) -> None:
 def load_records(file_key: str) -> list:
     """
     Carga todos los registros.
-    Siempre lee desde JSON local (rapido, con cache).
+    1. Cache en memoria (siempre rapido)
+    2. DB PostgreSQL si esta disponible (fuente de verdad persistente en Render)
+    3. JSON local como fallback cuando no hay DB (desarrollo local)
     Devuelve lista de dicts: {"id": int, "created_at": str, "updated_at": str, "data_json": dict}
     """
     cached = _cache_get(file_key)
     if cached is not None:
         return cached
 
+    # DB es la fuente primaria: sobrevive reinicios del servidor
+    if _db_enabled():
+        db_records = _load_from_db(file_key)
+        if db_records is not None:
+            _cache_set(file_key, db_records)
+            return db_records
+
+    # Fallback a JSON (desarrollo local sin DB)
     path = _file_path(file_key)
     records = _read_json_file(path)
     _cache_set(file_key, records)

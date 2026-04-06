@@ -26,8 +26,12 @@ app.register_blueprint(user_bp)
 # configurados, el sistema opera completamente con JSON.
 try:
     from queries.db import db_enabled, init_db
+    from queries.storage import load_records
     if db_enabled():
         init_db()
+        # Pre-calentar cache desde DB para que el primer request sea inmediato
+        load_records("ts_shipments")
+        load_records("ts_users")
 except Exception:
     pass
 

@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td>${product.marca || ""}</td>
                         <td>${product.sku || ""}</td>
                         <td>${product.q_total || 0}</td>
-                        <td>${formatCOP(Number(product.costo_proyectado_ddp || 0))}</td>
                         ${selectedChannel ? `<td>${product[selectedChannel] || 0}</td>` : `
                         <td>${product.retail || 0}</td>
                         <td>${product.resellers || 0}</td>
@@ -117,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td>${product.telcom || 0}</td>
                         <td>${product.libre || 0}</td>
                         `}
+                        <td>${formatCOP(Number(product.costo_proyectado_ddp || 0))}</td>
                     </tr>
                 `;
             })
@@ -135,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             <th>Marca</th>
                             <th>SKU</th>
                             <th>Q Total</th>
-                            <th>Costo Proyectado</th>
                             ${
                                 selectedChannel
                                     ? `<th>${channelHeader}</th>`
@@ -147,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <th>Telcom</th>
                             <th>Libre</th>`
                             }
+                            <th>Costo Proyectado</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -156,7 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         <tr>
                             <td colspan="3">Totales</td>
                             <td>${totals.q_total}</td>
-                            <td>${formatCOP(Number(totals.costo_proyectado_ddp || 0))}</td>
                             ${
                                 selectedChannel
                                     ? `<td>${totals[selectedChannel] || 0}</td>`
@@ -168,6 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <td>${totals.telcom}</td>
                             <td>${totals.libre}</td>`
                             }
+                            <td>${formatCOP(Number(totals.costo_proyectado_ddp || 0))}</td>
                         </tr>
                     </tfoot>
                 </table>

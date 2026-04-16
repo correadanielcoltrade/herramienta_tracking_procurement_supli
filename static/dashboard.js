@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const totals = {
             q_total: 0,
+            costo_proyectado_ddp: 0,
             retail: 0,
             resellers: 0,
             corporativo: 0,
@@ -88,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const rowsHtml = products
             .map((product) => {
                 totals.q_total += Number(product.q_total || 0);
+                totals.costo_proyectado_ddp += Number(product.costo_proyectado_ddp || 0);
                 CHANNELS.forEach((channel) => {
                     totals[channel] += Number(product[channel] || 0);
                 });
@@ -97,6 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td>${product.marca || ""}</td>
                         <td>${product.sku || ""}</td>
                         <td>${product.q_total || 0}</td>
+                        <td>$${(Number(product.costo_proyectado_ddp || 0)).toFixed(2)}</td>
                         ${selectedChannel ? `<td>${product[selectedChannel] || 0}</td>` : `
                         <td>${product.retail || 0}</td>
                         <td>${product.resellers || 0}</td>
@@ -123,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <th>Marca</th>
                             <th>SKU</th>
                             <th>Q Total</th>
+                            <th>Costo Proyectado</th>
                             ${
                                 selectedChannel
                                     ? `<th>${channelHeader}</th>`
@@ -143,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <tr>
                             <td colspan="3">Totales</td>
                             <td>${totals.q_total}</td>
+                            <td>$${(Number(totals.costo_proyectado_ddp || 0)).toFixed(2)}</td>
                             ${
                                 selectedChannel
                                     ? `<td>${totals[selectedChannel] || 0}</td>`

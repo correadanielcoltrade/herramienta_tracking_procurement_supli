@@ -22,6 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
     let filterTimer = null;
     const CHANNELS = ["retail", "resellers", "corporativo", "ecommerce", "telcom", "libre"];
 
+    function formatCOP(value) {
+        return new Intl.NumberFormat("es-CO", {
+            style: "currency",
+            currency: "COP",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(value);
+    }
+
     async function loadSummary() {
         const params = new URLSearchParams();
         if (filters.imp?.value.trim()) params.set("imp", filters.imp.value.trim());
@@ -99,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td>${product.marca || ""}</td>
                         <td>${product.sku || ""}</td>
                         <td>${product.q_total || 0}</td>
-                        <td>$${(Number(product.costo_proyectado_ddp || 0)).toFixed(2)}</td>
+                        <td>${formatCOP(Number(product.costo_proyectado_ddp || 0))}</td>
                         ${selectedChannel ? `<td>${product[selectedChannel] || 0}</td>` : `
                         <td>${product.retail || 0}</td>
                         <td>${product.resellers || 0}</td>
@@ -147,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <tr>
                             <td colspan="3">Totales</td>
                             <td>${totals.q_total}</td>
-                            <td>$${(Number(totals.costo_proyectado_ddp || 0)).toFixed(2)}</td>
+                            <td>${formatCOP(Number(totals.costo_proyectado_ddp || 0))}</td>
                             ${
                                 selectedChannel
                                     ? `<td>${totals[selectedChannel] || 0}</td>`

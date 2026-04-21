@@ -485,31 +485,65 @@ body[data-theme="dark"] .shipment-card.delivered {
 }
 
 .card-novedad {
-    background: linear-gradient(135deg, rgba(217, 119, 6, 0.08), rgba(217, 119, 6, 0.04));
-    border-left: 4px solid var(--accent);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 12px;
+    background: linear-gradient(135deg, rgba(217, 119, 6, 0.16), rgba(217, 119, 6, 0.08));
+    border-left: 5px solid var(--accent);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
     color: var(--text);
-    line-height: 1.4;
+    line-height: 1.5;
     flex: 1;
     white-space: normal;
     word-wrap: break-word;
     display: flex;
     align-items: flex-start;
-    gap: 8px;
+    gap: 10px;
+    transition: all var(--transition);
+    border-top: 1px solid rgba(217, 119, 6, 0.2);
+    border-right: 1px solid rgba(217, 119, 6, 0.1);
+    border-bottom: 1px solid rgba(217, 119, 6, 0.1);
+}
+
+.card-novedad:hover {
+    background: linear-gradient(135deg, rgba(217, 119, 6, 0.22), rgba(217, 119, 6, 0.12));
+    border-left-color: #e89b27;
+    transform: translateX(2px);
 }
 
 .card-novedad i {
     color: var(--accent);
-    font-size: 13px;
+    font-size: 15px;
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: rgba(217, 119, 6, 0.15);
+    border-radius: 50%;
+}
+
+.card-novedad strong {
+    color: var(--accent);
+    font-weight: 700;
 }
 
 html[data-theme="dark"] .card-novedad {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.06));
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(245, 158, 11, 0.08));
     border-left-color: var(--accent);
+    border-top-color: rgba(245, 158, 11, 0.25);
+    border-right-color: rgba(245, 158, 11, 0.12);
+    border-bottom-color: rgba(245, 158, 11, 0.12);
+}
+
+html[data-theme="dark"] .card-novedad:hover {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.24), rgba(245, 158, 11, 0.14));
+    border-left-color: #fbbf24;
+}
+
+html[data-theme="dark"] .card-novedad i {
+    background: rgba(245, 158, 11, 0.2);
 }
 
 .card-row:has(.card-novedad) {

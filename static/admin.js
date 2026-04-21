@@ -290,6 +290,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 setStatusSelectValue(shipmentForm.elements.estado_imp, shipment.estado_imp || "");
                 shipmentForm.elements.tipo_compra.value = shipment.tipo_compra || "";
                 shipmentForm.elements.fecha_llegada.value = shipment.fecha_llegada || "";
+                shipmentForm.elements.fecha_inicial_proyectada.value = shipment.fecha_inicial_proyectada || "";
+                shipmentForm.elements.novedades.value = shipment.novedades || "";
                 productsBody.innerHTML = "";
                 const products = shipment.productos || [];
                 products.forEach((product) => {

@@ -31,6 +31,8 @@ EXCEL_COLUMNS = [
     "ESTADO_IMP",
     "TIPO_COMPRA",
     "FECHA_LLEGADA",
+    "FECHA_INICIAL_PROYECTADA",
+    "NOVEDADES",
     "PRODUCTO",
     "MARCA",
     "UPC",
@@ -54,6 +56,8 @@ HEADER_MAP = {
     "ESTADO_IMP": "estado_imp",
     "TIPO_COMPRA": "tipo_compra",
     "FECHA_LLEGADA": "fecha_llegada",
+    "FECHA_INICIAL_PROYECTADA": "fecha_inicial_proyectada",
+    "NOVEDADES": "novedades",
     "PRODUCTO": "producto",
     "MARCA": "marca",
     "UPC": "upc",
@@ -396,6 +400,8 @@ def create_shipment(payload: dict) -> dict:
         "estado_imp": (payload.get("estado_imp") or "").strip(),
         "tipo_compra": (payload.get("tipo_compra") or "").strip(),
         "fecha_llegada": (payload.get("fecha_llegada") or "").strip(),
+        "fecha_inicial_proyectada": (payload.get("fecha_inicial_proyectada") or "").strip(),
+        "novedades": (payload.get("novedades") or "").strip(),
         "productos": [
             _coerce_product(p) for p in (payload.get("productos") or [])
         ],
@@ -439,6 +445,15 @@ def update_shipment(shipment_id: str, payload: dict) -> dict | None:
         shipment["fecha_llegada"] = (
             fecha_raw.strip() if isinstance(fecha_raw, str) else str(fecha_raw)
         )
+        fecha_inicial_raw = payload.get(
+            "fecha_inicial_proyectada", shipment.get("fecha_inicial_proyectada", "")
+        ) or ""
+        shipment["fecha_inicial_proyectada"] = (
+            fecha_inicial_raw.strip() if isinstance(fecha_inicial_raw, str) else str(fecha_inicial_raw)
+        )
+        shipment["novedades"] = (
+            payload.get("novedades", shipment.get("novedades", "")) or ""
+        ).strip()
 
         if "productos" in payload:
             shipment["productos"] = [
@@ -515,6 +530,8 @@ def _normalize_row(row: dict, column_map: dict):
         "estado_imp": _safe_str(get("ESTADO_IMP")),
         "tipo_compra": _safe_str(get("TIPO_COMPRA")),
         "fecha_llegada": _to_date_str(get("FECHA_LLEGADA")),
+        "fecha_inicial_proyectada": _to_date_str(get("FECHA_INICIAL_PROYECTADA")),
+        "novedades": _safe_str(get("NOVEDADES")),
     }
     return shipment, product
 
@@ -583,6 +600,8 @@ def export_to_excel(shipments=None):
                 "ESTADO_IMP": shipment.get("estado_imp", ""),
                 "TIPO_COMPRA": shipment.get("tipo_compra", ""),
                 "FECHA_LLEGADA": shipment.get("fecha_llegada", ""),
+                "FECHA_INICIAL_PROYECTADA": shipment.get("fecha_inicial_proyectada", ""),
+                "NOVEDADES": shipment.get("novedades", ""),
                 "PRODUCTO": product.get("producto", ""),
                 "MARCA": product.get("marca", ""),
                 "UPC": product.get("upc", ""),

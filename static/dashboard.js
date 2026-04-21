@@ -213,6 +213,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="card-meta">${item.tipo_compra || "Sin tipo compra"}</div>
                     <div class="card-meta">${item.fecha_llegada || ""}</div>
                 </div>
+                <div class="card-row">
+                    <div class="card-meta"><strong>Proy:</strong> ${item.fecha_inicial_proyectada || "-"}</div>
+                    ${item.novedades ? `<div class="card-novedad">${item.novedades}</div>` : ""}
+                </div>
                 <div class="card-detail" data-detail-id="${item.id}">
                     ${detailHtml}
                 </div>

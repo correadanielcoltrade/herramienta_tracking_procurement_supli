@@ -210,13 +210,27 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="card-badge">${item.total_qty || 0} uds</div>
                 </div>
                 <div class="card-row">
-                    <div class="card-meta">${item.tipo_compra || "Sin tipo compra"}</div>
-                    <div class="card-meta">${item.fecha_llegada || ""}</div>
+                    <div class="card-dates">
+                        <div class="card-date-item">
+                            <span class="card-date-label">Llegada:</span>
+                            <span class="card-date-value">${item.fecha_llegada || "-"}</span>
+                        </div>
+                        <div class="card-date-item">
+                            <span class="card-date-label">Proyectada:</span>
+                            <span class="card-date-value">${item.fecha_inicial_proyectada || "-"}</span>
+                        </div>
+                    </div>
+                    <div class="card-type">${item.tipo_compra || "Nacional"}</div>
                 </div>
-                <div class="card-row">
-                    <div class="card-meta"><strong>Proy:</strong> ${item.fecha_inicial_proyectada || "-"}</div>
-                    ${item.novedades ? `<div class="card-novedad"><i class="fas fa-circle-exclamation"></i> <strong>Novedad:</strong> ${item.novedades}</div>` : ""}
+                ${item.novedades ? `
+                <div class="card-novedad-container">
+                    <div class="card-novedad-header">
+                        <i class="fas fa-bell"></i>
+                        <span>Novedad</span>
+                    </div>
+                    <div class="card-novedad-text">${item.novedades}</div>
                 </div>
+                ` : ""}
                 <div class="card-detail" data-detail-id="${item.id}">
                     ${detailHtml}
                 </div>

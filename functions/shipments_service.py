@@ -374,6 +374,8 @@ def list_shipments_summary(filters=None) -> list:
                 "estado_imp": shipment.get("estado_imp"),
                 "tipo_compra": shipment.get("tipo_compra"),
                 "fecha_llegada": shipment.get("fecha_llegada"),
+                "fecha_inicial_proyectada": shipment.get("fecha_inicial_proyectada"),
+                "novedades": shipment.get("novedades"),
                 "created_at": shipment.get("created_at"),
                 "updated_at": shipment.get("updated_at"),
                 "total_qty": total_qty,

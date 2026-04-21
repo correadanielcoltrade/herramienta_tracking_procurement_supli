@@ -360,6 +360,8 @@ document.addEventListener("DOMContentLoaded", () => {
             estado_imp: shipmentForm.elements.estado_imp.value,
             tipo_compra: shipmentForm.elements.tipo_compra.value,
             fecha_llegada: shipmentForm.elements.fecha_llegada.value,
+            fecha_inicial_proyectada: shipmentForm.elements.fecha_inicial_proyectada.value,
+            novedades: shipmentForm.elements.novedades.value,
             productos: collectProducts(),
         };
 

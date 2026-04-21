@@ -2,10 +2,11 @@
   {
     "id": 1,
     "created_at": "2026-04-14T17:44:10+00:00",
-    "updated_at": "2026-04-21T16:33:12+00:00",
+    "updated_at": "2026-04-21T16:41:57+00:00",
     "data_json": {
       "id": "e35a81c6-b0b8-4cff-8246-82f2047aefcb",
       "imp": "442",
+      "novedades": "",
       "productos": [
         {
           "producto": "ROKU STREAMING STICK HD 2025 (NEGRO)",
@@ -487,11 +488,10 @@
       "proveedor": "Expert Technology Group, Inc",
       "created_at": "2026-04-14T17:44:10+00:00",
       "estado_imp": "ENTREGADO",
-      "updated_at": "2026-04-21T16:33:12+00:00",
+      "updated_at": "2026-04-21T16:41:57+00:00",
       "tipo_compra": "INTERNACIONAL",
       "fecha_llegada": "2026-04-14",
-      "fecha_inicial_proyectada": "",
-      "novedades": ""
+      "fecha_inicial_proyectada": ""
     }
   }
 ]

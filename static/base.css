@@ -484,6 +484,39 @@ body[data-theme="dark"] .shipment-card.delivered {
     font-weight: 600;
 }
 
+.card-novedad {
+    background: linear-gradient(135deg, rgba(217, 119, 6, 0.08), rgba(217, 119, 6, 0.04));
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.4;
+    flex: 1;
+    white-space: normal;
+    word-wrap: break-word;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.card-novedad i {
+    color: var(--accent);
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+html[data-theme="dark"] .card-novedad {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.06));
+    border-left-color: var(--accent);
+}
+
+.card-row:has(.card-novedad) {
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 .card-right {
     display: flex;
     align-items: center;

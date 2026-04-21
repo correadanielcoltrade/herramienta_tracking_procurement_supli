@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div class="card-row">
                     <div class="card-meta"><strong>Proy:</strong> ${item.fecha_inicial_proyectada || "-"}</div>
-                    ${item.novedades ? `<div class="card-novedad">${item.novedades}</div>` : ""}
+                    ${item.novedades ? `<div class="card-novedad"><i class="fas fa-bell"></i> ${item.novedades}</div>` : ""}
                 </div>
                 <div class="card-detail" data-detail-id="${item.id}">
                     ${detailHtml}

@@ -342,12 +342,76 @@ html.no-transition .app-shell {
 }
 
 .field input,
-.field select {
+.field select,
+.field textarea {
     padding: 10px 12px;
     border-radius: 10px;
     border: 1px solid var(--border);
     background: var(--panel-2);
     color: var(--text);
+    font-family: inherit;
+    transition: all var(--transition);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+    background: var(--panel);
+}
+
+.field textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.5;
+}
+
+/* Estilo especial para Novedades */
+.field:has(textarea[name="novedades"]) {
+    background: linear-gradient(135deg, rgba(217, 119, 6, 0.04), rgba(217, 119, 6, 0.02));
+    border: 1px solid rgba(217, 119, 6, 0.2);
+    border-radius: 12px;
+    padding: 14px;
+    gap: 8px;
+}
+
+.field:has(textarea[name="novedades"]) span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.field:has(textarea[name="novedades"]) span::before {
+    content: "📋";
+    font-size: 16px;
+}
+
+.field:has(textarea[name="novedades"]) textarea {
+    background: var(--panel);
+    border: 2px solid rgba(217, 119, 6, 0.15);
+    padding: 12px 14px;
+}
+
+.field:has(textarea[name="novedades"]) textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+}
+
+html[data-theme="dark"] .field:has(textarea[name="novedades"]) {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), rgba(245, 158, 11, 0.03));
+    border-color: rgba(245, 158, 11, 0.25);
+}
+
+html[data-theme="dark"] .field:has(textarea[name="novedades"]) span {
+    color: var(--accent);
+}
+
+html[data-theme="dark"] .field:has(textarea[name="novedades"]) textarea {
+    border-color: rgba(245, 158, 11, 0.2);
 }
 
 .form-grid {

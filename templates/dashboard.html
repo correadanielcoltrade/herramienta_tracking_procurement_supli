@@ -39,7 +39,13 @@
 </div>
 
 <div class="panel">
-    <h3>Embarques</h3>
+    <div class="panel-header">
+        <h3>Embarques</h3>
+        <button class="ghost-btn" id="sortToggle" type="button" title="Cambiar orden por fecha de llegada">
+            <i class="fas fa-arrow-down-wide-short"></i>
+            <span id="sortToggleLabel">Más reciente primero</span>
+        </button>
+    </div>
     <div class="cards-grid" id="shipmentsGrid"></div>
 </div>
 {% endblock %}

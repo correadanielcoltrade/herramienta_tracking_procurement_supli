@@ -2,6 +2,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const shipmentsGrid = document.getElementById("shipmentsGrid");
     const clearFiltersBtn = document.getElementById("clearFilters");
     const exportFilteredBtn = document.getElementById("exportFilteredBtn");
+    const sortToggleBtn = document.getElementById("sortToggle");
+    const sortToggleLabel = document.getElementById("sortToggleLabel");
+
+    // Orden por fecha de llegada: "desc" = mas reciente primero (por defecto), "asc" = mas antiguo primero.
+    let sortDir = "desc";
 
     const filters = {
         imp: document.getElementById("filterImp"),
@@ -21,6 +26,42 @@ document.addEventListener("DOMContentLoaded", () => {
     const shipmentDetails = new Map();
     let filterTimer = null;
     const CHANNELS = ["retail", "resellers", "corporativo", "ecommerce", "telcom", "libre"];
+
+    function sortKey(item) {
+        // Usa fecha de llegada; si falta, cae a created_at para no perder el orden.
+        const raw = item.fecha_llegada || item.created_at || "";
+        const time = Date.parse(raw);
+        return Number.isNaN(time) ? null : time;
+    }
+
+    function sortShipments(items) {
+        const factor = sortDir === "asc" ? 1 : -1;
+        return [...items].sort((a, b) => {
+            const ka = sortKey(a);
+            const kb = sortKey(b);
+            // Los embarques sin fecha valida quedan siempre al final.
+            if (ka === null && kb === null) return 0;
+            if (ka === null) return 1;
+            if (kb === null) return -1;
+            return (ka - kb) * factor;
+        });
+    }
+
+    function updateSortLabel() {
+        if (sortToggleLabel) {
+            sortToggleLabel.textContent =
+                sortDir === "desc" ? "Más reciente primero" : "Más antiguo primero";
+        }
+        if (sortToggleBtn) {
+            const icon = sortToggleBtn.querySelector("i");
+            if (icon) {
+                icon.className =
+                    sortDir === "desc"
+                        ? "fas fa-arrow-down-wide-short"
+                        : "fas fa-arrow-up-wide-short";
+            }
+        }
+    }
 
     function formatCOP(value) {
         return new Intl.NumberFormat("es-CO", {
@@ -48,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
             `/api/shipments-summary${query ? `?${query}` : ""}`
         );
         const data = await response.json();
-        shipments = data.data || [];
+        shipments = sortShipments(data.data || []);
         renderCards(shipments);
         if (!shipments.some((item) => item.id === activeId)) {
             activeId = null;
@@ -281,6 +322,15 @@ document.addEventListener("DOMContentLoaded", () => {
         input.addEventListener("change", scheduleLoad);
     });
 
+    if (sortToggleBtn) {
+        sortToggleBtn.addEventListener("click", () => {
+            sortDir = sortDir === "desc" ? "asc" : "desc";
+            updateSortLabel();
+            shipments = sortShipments(shipments);
+            renderCards(shipments);
+        });
+    }
+
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener("click", () => {
             Object.values(filters).forEach((input) => {
@@ -330,5 +380,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return detail;
     }
 
+    updateSortLabel();
     loadSummary();
 });

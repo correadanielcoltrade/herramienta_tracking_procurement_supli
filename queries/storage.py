@@ -2,10 +2,13 @@
 storage.py - Capa de persistencia unificada para Tracking de Embarques.
 
 Comportamiento:
-- Almacenamiento PRIMARIO: archivos JSON en data/  (lectura siempre rapida)
-- Almacenamiento SECUNDARIO: PostgreSQL, si DATABASE_URL o DB_HOST estan en .env
-- Escritura DUAL: cada save_records escribe en JSON Y en DB (si esta disponible)
-- Si la DB falla, el sistema continua usando JSON sin interrumpir el servicio
+- Si hay DB configurada (DATABASE_URL o DB_HOST en .env / variables de Render),
+  PostgreSQL es la UNICA fuente de verdad. Si la DB falla se lanza el error:
+  nunca se usa el JSON local como respaldo, para no sobrescribir la DB con
+  datos viejos (el disco de Render se borra cada vez que el servidor duerme).
+- Sin DB configurada (desarrollo local): se usan los archivos JSON en data/
+- Con DB, el JSON local se sigue escribiendo solo como copia de respaldo
+- Las tablas viven en el schema DB_SCHEMA (ej. procurement_supli)
 - Cache en memoria con TTL configurable via STORAGE_CACHE_TTL (segundos, 0=sin TTL)
 
 Formato de cada registro:
@@ -22,10 +25,13 @@ Tablas en DB (prefijo configurable via DB_TABLE_PREFIX, default "trackingsupli")
 """
 
 import json
+import logging
 import os
 import threading
 import time
 from datetime import datetime, timezone
+
+logger = logging.getLogger(__name__)
 
 try:
     import psycopg2
@@ -170,22 +176,46 @@ def _db_table_prefix() -> str:
     return prefix
 
 
+def _db_schema() -> str:
+    schema = (os.environ.get("DB_SCHEMA") or "").strip()
+    return "".join(ch for ch in schema if ch.isalnum() or ch == "_")
+
+
+def _connect_kwargs() -> dict:
+    kwargs = {"connect_timeout": 15}
+    schema = _db_schema()
+    if schema:
+        # Todas las consultas sin schema explicito van a DB_SCHEMA
+        kwargs["options"] = f"-c search_path={schema}"
+    return kwargs
+
+
 def _db_connect():
     config = _db_config()
     if config is None or psycopg2 is None:
         return None
+    extra = _connect_kwargs()
     if "url" in config:
         sslmode = config.get("sslmode")
-        conn = psycopg2.connect(config["url"], sslmode=sslmode) if sslmode else psycopg2.connect(config["url"])
+        if sslmode:
+            extra["sslmode"] = sslmode
+        connect = lambda: psycopg2.connect(config["url"], **extra)
     else:
-        conn = psycopg2.connect(
+        connect = lambda: psycopg2.connect(
             dbname=config["name"],
             user=config["user"],
             password=config["password"],
             host=config["host"],
             port=config["port"],
             sslmode=config["sslmode"],
+            **extra,
         )
+    try:
+        conn = connect()
+    except psycopg2.OperationalError:
+        # Reintento: la DB de Render puede tardar en responder tras inactividad
+        time.sleep(2)
+        conn = connect()
     conn.autocommit = False
     return conn
 
@@ -276,19 +306,13 @@ def _deserialize_json(value):
 # Lectura desde DB
 # ---------------------------------------------------------------------------
 
-def _load_from_db(file_key: str) -> list | None:
+def _load_from_db(file_key: str) -> list:
     """
     Carga todos los registros desde la tabla DB correspondiente.
-    Devuelve lista de dicts con estructura estandar, o None si la DB no esta
-    disponible o hay error (para que el llamador pueda hacer fallback a JSON).
-    Devuelve [] (lista vacia) si la DB esta disponible pero la tabla no tiene datos.
+    Devuelve [] si la tabla no tiene datos. Lanza la excepcion si la DB falla.
     """
-    if not _db_enabled():
-        return None
     try:
         conn = _db_connect()
-        if conn is None:
-            return None
         try:
             table_name = _resolve_table(file_key, conn)
             _ensure_table(conn, table_name)
@@ -311,25 +335,24 @@ def _load_from_db(file_key: str) -> list | None:
         finally:
             conn.close()
     except Exception:
-        return None
+        logger.exception("Error leyendo %s desde la DB", file_key)
+        raise
 
 
 # ---------------------------------------------------------------------------
-# Escritura en DB (silenciosa si falla)
+# Escritura en DB
 # ---------------------------------------------------------------------------
 
 def _sync_to_db(file_key: str, records: list) -> None:
     """
     Escribe todos los registros en la tabla de DB correspondiente.
-    Fallo completamente silencioso: si la DB no esta disponible o hay error,
-    el sistema sigue funcionando con JSON sin interrupciones.
+    Lanza la excepcion si la DB falla, para que el usuario vea el error en
+    lugar de creer que se guardo.
     """
     if not _db_enabled():
         return
     try:
         conn = _db_connect()
-        if conn is None:
-            return
         try:
             table_name = _resolve_table(file_key, conn)
             _ensure_table(conn, table_name)
@@ -354,8 +377,8 @@ def _sync_to_db(file_key: str, records: list) -> None:
         finally:
             conn.close()
     except Exception:
-        # Fallo silencioso: JSON es la fuente de verdad
-        pass
+        logger.exception("Error guardando %s en la DB", file_key)
+        raise
 
 
 # ---------------------------------------------------------------------------
@@ -366,24 +389,18 @@ def load_records(file_key: str) -> list:
     """
     Carga todos los registros.
     1. Cache en memoria (siempre rapido)
-    2. DB PostgreSQL si esta disponible (fuente de verdad persistente en Render)
-    3. JSON local como fallback cuando no hay DB (desarrollo local)
+    2. DB PostgreSQL si esta configurada (fuente de verdad persistente en Render)
+    3. JSON local solo cuando NO hay DB configurada (desarrollo local)
     Devuelve lista de dicts: {"id": int, "created_at": str, "updated_at": str, "data_json": dict}
     """
     cached = _cache_get(file_key)
     if cached is not None:
         return cached
 
-    # DB es la fuente primaria: sobrevive reinicios del servidor
     if _db_enabled():
-        db_records = _load_from_db(file_key)
-        if db_records is not None:
-            _cache_set(file_key, db_records)
-            return db_records
-
-    # Fallback a JSON (desarrollo local sin DB)
-    path = _file_path(file_key)
-    records = _read_json_file(path)
+        records = _load_from_db(file_key)
+    else:
+        records = _read_json_file(_file_path(file_key))
     _cache_set(file_key, records)
     return records
 
@@ -391,16 +408,35 @@ def load_records(file_key: str) -> list:
 def save_records(file_key: str, records: list) -> None:
     """
     Persiste la lista completa de registros.
-    1. Escribe en JSON local (atomico via .tmp)
-    2. Escribe en DB si esta disponible (silencioso si falla)
+    1. Escribe en DB si esta configurada (lanza error si falla)
+    2. Escribe en JSON local (respaldo / desarrollo local)
     3. Actualiza cache en memoria
     """
-    path = _file_path(file_key)
-    _write_json_file(path, records)
-    _cache_invalidate(file_key)
+    try:
+        _sync_to_db(file_key, records)
+    except Exception:
+        # Los servicios modifican la lista del cache en sitio: descartarla
+        # para que la siguiente lectura vuelva a traer lo que hay en la DB
+        _cache_invalidate(file_key)
+        raise
+    try:
+        _write_json_file(_file_path(file_key), records)
+    except OSError:
+        if not _db_enabled():
+            raise
     _cache_set(file_key, records)
-    # Escritura dual: sincroniza con DB
-    _sync_to_db(file_key, records)
+
+
+def init_storage() -> dict:
+    """
+    Verifica la conexion a la DB, crea las tablas si no existen y precarga
+    el cache. Devuelve {file_key: cantidad_de_registros}.
+    """
+    summary = {}
+    for file_key in DATA_FILES:
+        _cache_invalidate(file_key)
+        summary[file_key] = len(load_records(file_key))
+    return summary
 
 
 def next_id(file_key: str) -> int:

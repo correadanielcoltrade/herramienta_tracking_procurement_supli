@@ -1,3 +1,4 @@
+import logging
 import os
 import threading
 import webbrowser
@@ -22,18 +23,24 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(user_bp)
 
-# La inicializacion de BD es opcional: si no hay DATABASE_URL / DB_HOST
-# configurados, el sistema opera completamente con JSON.
-try:
-    from queries.db import db_enabled, init_db
-    from queries.storage import load_records
-    if db_enabled():
-        init_db()
+logging.basicConfig(level=logging.INFO)
+
+# La BD es opcional: si no hay DATABASE_URL / DB_HOST configurados, el
+# sistema opera completamente con JSON (solo para desarrollo local).
+from queries.storage import _db_enabled, _db_schema, init_storage
+
+if _db_enabled():
+    try:
         # Pre-calentar cache desde DB para que el primer request sea inmediato
-        load_records("ts_shipments")
-        load_records("ts_users")
-except Exception:
-    pass
+        counts = init_storage()
+        logging.info("DB conectada (schema=%s): %s", _db_schema() or "public", counts)
+    except Exception:
+        logging.exception("No se pudo conectar a la DB al iniciar")
+else:
+    logging.warning(
+        "DB NO configurada: los datos se guardan en JSON local y en Render "
+        "se perderan al reiniciar. Configura DB_HOST/DB_NAME/DB_USER/DB_PASSWORD."
+    )
 
 
 @app.route("/")
